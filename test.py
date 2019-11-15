@@ -22,7 +22,10 @@ def read_data(filename, return_type="list"):
     return matrix
 
 
-data = read_data('iris.data')
-print(data)
-# clust = agglomerative(dataset, 3, 'single', 'euclidean')
-# print(clust)
+data = np.array(read_data('iris.data'))
+
+train = data[:, :4]
+train = train.astype('float64')
+# print(train)
+clust = agglomerative(train.tolist(), 3, 'single', 'euclidean')
+print(clust)
