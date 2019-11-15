@@ -3,10 +3,57 @@ Hierarchical clustering
 
 """
 import numpy as np
-from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.spatial import distance
 
-def agglomerative():
-    pass
+def agglomerative(data, N_cluster, linkage, calc_dist):
+    """
+    Calculate dissimilarity or distance between 2 clusters
+
+    Parameters
+    ----------
+    c1 : numpy.array or list.
+        Cluster number 1
+    
+    c2 : numpy.array or list.
+        Cluster number 2
+
+    mode : str
+        linkage type for calculating dissimilarity. 
+        Valid modes : single, complete, average, average-group
+
+    d_mode : str
+        Type for calculating distance. 
+        Valid modes : euclidean, manhattan    
+
+    Returns
+    -------
+    d : float
+        Dissimilarity result between 2 clusters, calculated based on linkage mode
+    """
+    if len(data) < N_cluster:
+        raise ValueError('N_cluster can not be bigger than the number of data')
+    elif len(data) == N_cluster or len(data) == 1:
+        return data
+
+    # Singleton
+    clusters = [[data[i]] for i in range(len(data))]
+    cluster_count = len(clusters)
+
+    while cluster_count > N_cluster:
+        closest_d = _linkage(clusters[0], clusters[1], calc_dist, linkage)
+        closest_pair = (0, 1)
+        for i in range(len(clusters)):
+            for j in range(i+1, len(clusters)):
+                temp = _linkage(clusters[i], clusters[j], calc_dist, linkage)
+                if temp < closest_d: 
+                    closest_d = temp
+                    closest_pair = (i, j)
+        new_cluster = clusters[closest_pair[0]] + clusters[closest_pair[1]]
+        clusters.pop(max(closest_pair[0], closest_pair[1]))
+        clusters.pop(min(closest_pair[0], closest_pair[1]))
+        clusters.append(new_cluster)
+        cluster_count -= 1
+    return clusters
 
 def _linkage(c1, c2, d_mode, mode = 'single'):
     """
@@ -68,13 +115,12 @@ def _linkage(c1, c2, d_mode, mode = 'single'):
 
     elif mode == 'average':
         pass
-
     else:
         raise Exception('linkage mode {} is invalid'.format(mode))
 
 
 
-def _distance(p1, p2, mode='euclidean'):
+def _distance(p1, p2, d_mode='euclidean'):
     """
     Calculate distance between 2 data
 
@@ -86,7 +132,7 @@ def _distance(p1, p2, mode='euclidean'):
     p2 : list
         data point 2
 
-    mode : str
+    d_mode : str
         type for calculating distance 
         valid modes : euclidean, manhattan
 
@@ -95,6 +141,11 @@ def _distance(p1, p2, mode='euclidean'):
     d : float
         Distance between 2 data points
     """
-    mode = mode.lower()
-    if mode == 'euclidean':
-        return np.linalg.norm(np.array(p1), np.array(p2))
+    d_mode = d_mode.lower()
+    if d_mode == 'euclidean':
+        return distance.euclidean(p1, p2)
+
+
+dataset = [[0,0], [3,4], [1,1], [3,3]]
+clust = agglomerative(dataset, 3, 'single', 'euclidean')
+print(clust)
