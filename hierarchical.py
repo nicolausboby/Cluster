@@ -7,7 +7,7 @@ from scipy.spatial import distance
 
 def agglomerative(data, N_cluster, linkage, calc_dist):
     """
-    Calculate dissimilarity or distance between 2 clusters
+    Bottom-up Hierarchical clustering 
 
     Parameters
     ----------
@@ -144,8 +144,3 @@ def _distance(p1, p2, d_mode='euclidean'):
     d_mode = d_mode.lower()
     if d_mode == 'euclidean':
         return distance.euclidean(p1, p2)
-
-
-dataset = [[0,0], [3,4], [1,1], [3,3]]
-clust = agglomerative(dataset, 3, 'single', 'euclidean')
-print(clust)
