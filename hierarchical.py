@@ -11,24 +11,24 @@ def agglomerative(data, N_cluster, linkage, calc_dist):
 
     Parameters
     ----------
-    c1 : numpy.array or list.
-        Cluster number 1
+    data : list.
+        Input data that will be clustered
     
-    c2 : numpy.array or list.
-        Cluster number 2
+    N_cluster : int.
+        Number of output clusters
 
-    mode : str
+    linkage : str
         linkage type for calculating dissimilarity. 
         Valid modes : single, complete, average, average-group
 
-    d_mode : str
+    calc_dist : str
         Type for calculating distance. 
         Valid modes : euclidean, manhattan    
 
     Returns
     -------
-    d : float
-        Dissimilarity result between 2 clusters, calculated based on linkage mode
+    clusters : list
+        Output clusters
     """
     if len(data) < N_cluster:
         raise ValueError('N_cluster can not be bigger than the number of data')
