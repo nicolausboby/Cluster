@@ -114,7 +114,15 @@ def _linkage(c1, c2, d_mode, mode = 'single'):
         return _distance(avgc1, avgc2, d_mode)
 
     elif mode == 'average':
-        pass
+        sum_p = 0
+        len_p = len(c1)
+        for p in c1:
+            sum_q = 0
+            len_q = len(c2)
+            for q in c2:
+                sum_q += _distance(p, q, d_mode)
+            sum_p += sum_q / len_q
+        return sum_p/len_p
     else:
         raise Exception('linkage mode {} is invalid'.format(mode))
 
@@ -144,3 +152,8 @@ def _distance(p1, p2, d_mode='euclidean'):
     d_mode = d_mode.lower()
     if d_mode == 'euclidean':
         return distance.euclidean(p1, p2)
+    elif d_mode == 'manhattan':
+        t = 0
+        for i in range(len(p1)):
+            t += abs(p1[i] - p2[i])
+        return t
