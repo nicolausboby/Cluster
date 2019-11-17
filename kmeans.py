@@ -52,7 +52,7 @@ class KMeansAlg:
             mean = np.zeros(centroids.shape)
             for i in range(len(clusters)):
                 for j in range(len(clusters[i])):
-                    mean[i][j] = np.mean(input_dataset[i][j])
+                    mean[i][j] = np.mean(clusters_new[i][j])
                 centroids_new[i] = mean[i]
 
             error = euclidean(centroids, centroids_new)
