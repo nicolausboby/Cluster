@@ -5,7 +5,65 @@ Hierarchical clustering
 import numpy as np
 from scipy.spatial import distance
 
-def agglomerative(data, N_cluster, linkage, calc_dist):
+
+class AgglomerativeClustering():
+    
+    def __init__(self, n_clusters=2, affinity='euclidean',
+                 linkage='average-group'):
+        self.n_clusters = n_clusters
+        self.affinity = affinity
+        self.linkage = linkage
+        self.clusters = None
+
+
+    def __str__(self):
+        return "AgglomerativeClustering Object, n_clusters = " + self.n_clusters
+
+
+    def fit(self, X):
+        """Fit the hierarchical clustering.
+        Parameters
+        ----------
+        X : list.
+
+        Returns
+        -------
+        self
+        """
+        check_input(X)
+        self.clusters = _agglomerative(X, self.n_clusters, self.linkage, self.affinity)
+        
+
+    def predict(self, X):
+        if self.clusters is None:
+            raise Exception('Model has not been fitted')
+
+        check_input(X)
+
+        min_dist = _distance(X[0], self.clusters[0], self.affinity)
+        cluster_no = 0
+        for item in X:
+            for i, cluster in enumerate(self.clusters):
+                temp = _distance(item, cluster, self.affinity)
+                if temp < min_dist:
+                    min_dist = temp
+                    cluster_no = i
+            self.clusters[i].append(item)
+
+        
+def check_input(X):
+    if len(X) < 2:
+        raise ValueError('Input X have to be at least the size of 2')
+
+    for p in X:
+        for q in p:
+            if not isinstance(q, float) or not isinstance(q, int):
+                raise TypeError('AgglomerativeClustering class only accepts float or int data')
+            if isinstance(q, int):
+                q = float(q)
+
+
+def _agglomerative(data, N_cluster, linkage, calc_dist):
     """
     Bottom-up Hierarchical clustering 
 
@@ -54,6 +112,7 @@ def agglomerative(data, N_cluster, linkage, calc_dist):
         clusters.append(new_cluster)
         cluster_count -= 1
     return clusters
+
 
 def _linkage(c1, c2, d_mode, mode = 'single'):
     """
@@ -125,7 +184,6 @@ def _linkage(c1, c2, d_mode, mode = 'single'):
         return sum_p/len_p
     else:
         raise Exception('linkage mode {} is invalid'.format(mode))
-
 
 
 def _distance(p1, p2, d_mode='euclidean'):
