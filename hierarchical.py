@@ -40,6 +40,8 @@ class AgglomerativeClustering():
 
         check_input(X)
 
+        clusters = self.clusters
+
         min_dist = _distance(X[0], self.clusters[0], self.affinity)
         cluster_no = 0
         for item in X:
@@ -48,7 +50,9 @@ class AgglomerativeClustering():
                 if temp < min_dist:
                     min_dist = temp
                     cluster_no = i
-            self.clusters[i].append(item)
+            clusters[i].append(item)
+        
+        return clusters
 
         
 def check_input(X):
