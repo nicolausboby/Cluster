@@ -6,6 +6,7 @@ from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
+
 # Helper Functions
 def euclidean(a, b):
     return np.linalg.norm(a-b)
@@ -45,7 +46,7 @@ class KMeansAlg:
                     distances.append(euclidean(input_dataset[i], centroids[j]))
 
                 cluster_idx = distances.index(min(distances))
-                clusters_new[cluster_idx].append(input_dataset)
+                clusters_new[cluster_idx].append(input_dataset[i])
 
             # Get means per cluster and assign new centroids
             mean = np.zeros(centroids.shape)
