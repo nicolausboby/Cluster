@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
 # Algorithms
-from hierarchical import agglomerative
+from hierarchical import AgglomerativeClustering as ac
 from kmeans import KMeansAlg
 
 # Load Iris dataset
@@ -42,8 +42,10 @@ print("Accuracy Score: " + str(accuracy_score(y_test, y_pred_kmeans_sklearn)))
 print("")
 
 print("== Agglomerative with self-created algorithm ==")
-y_pred_agglo_self = agglomerative(X_train, 3, 'single', 'euclidean')
-print("Accuracy Score: " + str(accuracy_score(y_train, y_pred_agglo_self)))
+agglo = ac(n_clusters=3, linkage='single', affinity='euclidean')
+agglo.fit(X_train)
+y_pred_agglo_self = agglo.predict(X_test)
+print("Accuracy Score: " + str(accuracy_score(y_test, y_pred_agglo_self)))
 print("")
 
 print("== Agglomerative with scikit-learn library ==")
@@ -52,32 +54,3 @@ agglo_sklearn.fit(X_train)
 y_pred_agglo_sklearn = agglo_sklearn.labels_
 print("Accuracy Score: " + str(accuracy_score(y_train, y_pred_agglo_sklearn)))
 print("")
-
-'''
-def read_data(filename, return_type="list"):
-    # parse csv file
-    f = open(filename, 'r')
-
-    lines = f.read().splitlines()
-    matrix = []
-    for line in lines:
-        row = []
-        tokens = line.split(",")
-        for token in tokens:
-            try:
-                row.append(float(token))
-            except ValueError:
-                row.append(token)
-        matrix.append(row)
-
-    return matrix
-
-data = np.array(read_data('iris.data'))
-
-train = data[:, :4]
-train = train.astype('float64')
-# print(train)
-clust = agglomerative(train.tolist(), 3, 'single', 'euclidean')
-print(clust)
-'''
-
