@@ -35,6 +35,15 @@ class AgglomerativeClustering():
         
 
     def predict(self, X):
+        """Predict the input according to existing clusters.
+        Parameters
+        ----------
+        X : list.
+
+        Returns
+        -------
+        clusters : list.
+        """
         if self.clusters is None:
             raise Exception('Model has not been fitted')
 
@@ -42,11 +51,11 @@ class AgglomerativeClustering():
 
         clusters = self.clusters
 
-        min_dist = _distance(X[0], self.clusters[0], self.affinity)
+        min_dist = _linkage(X[0], self.clusters[0], self.affinity)
         cluster_no = 0
         for item in X:
             for i, cluster in enumerate(self.clusters):
-                temp = _distance(item, cluster, self.affinity)
+                temp = _linkage(item, cluster, self.affinity)
                 if temp < min_dist:
                     min_dist = temp
                     cluster_no = i
@@ -56,6 +65,14 @@ class AgglomerativeClustering():
 
         
 def check_input(X):
+    """Checks input validity
+    ----------
+    X : list.
+
+    Returns
+    -------
+    None
+    """
     if len(X) < 2:
         raise ValueError('Input X have to be at least the size of 2')
 
