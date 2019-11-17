@@ -49,17 +49,17 @@ class AgglomerativeClustering():
 
         check_input(X)
 
-        clusters = self.clusters
+        clusters = []
 
-        min_dist = _linkage(X[0], self.clusters[0], self.affinity)
-        cluster_no = 0
         for item in X:
+            min_dist = _linkage(item, self.clusters[0], self.affinity)
+            cluster_no = 0
             for i, cluster in enumerate(self.clusters):
                 temp = _linkage(item, cluster, self.affinity)
                 if temp < min_dist:
                     min_dist = temp
                     cluster_no = i
-            clusters[i].append(item)
+            clusters.append(cluster_no)
         
         return clusters
 
@@ -78,7 +78,8 @@ def check_input(X):
 
     for p in X:
         for q in p:
-            if not isinstance(q, float) or not isinstance(q, int):
+            if not isinstance(q, float):
+                print(type(q))
                 raise TypeError('AgglomerativeClustering class only accepts float or int data')
             if isinstance(q, int):
                 q = float(q)
