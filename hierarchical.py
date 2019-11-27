@@ -183,14 +183,14 @@ def _linkage(c1, c2, d_mode, mode = 'single'):
     elif mode == 'average-group':
         avgc1 = []
         avgc2 = []
-        for axis in range(len(p[0])):
+        for axis in range(len(c1[0])):
             sum_p = sum_q =  0
             for p in c1:
                 sum_p += p[axis]
-            avgc1.append(sum_p/len(p[0]))
+            avgc1.append(sum_p/len(c1[0]))
             for q in c2:
                 sum_q += q[axis]
-            avgc2.append(sum_q/len(q[0]))
+            avgc2.append(sum_q/len(c2[0]))
 
         return _distance(avgc1, avgc2, d_mode)
 
